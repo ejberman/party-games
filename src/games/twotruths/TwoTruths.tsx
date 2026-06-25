@@ -94,6 +94,11 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
       .filter((k) => !(g.submitted ?? []).includes(k));
     return (
       <div className="mx-auto max-w-lg">
+        {toast && (
+          <div className="mb-4 animate-pop-in rounded-xl border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-center text-orange-200">
+            {toast}
+          </div>
+        )}
         <div className="mb-6 text-center">
           <div className="mb-2 text-5xl">🕵️</div>
           <h2 className="text-2xl font-black">Two Truths & a Lie</h2>
