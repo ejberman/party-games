@@ -129,7 +129,11 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
             ))}
             <button
               disabled={statements.some((s) => !s.trim()) || lieIndex === null}
-              onClick={() => socket.emit("tt:submit", { statements, lieIndex })}
+              onClick={() => {
+                socket.emit("tt:submit", { statements, lieIndex });
+                setToast("🔒 Locked it in! Nice work.");
+                setTimeout(() => setToast(null), 2500);
+              }}
               className="mt-2 rounded-2xl bg-gradient-to-br from-orange-500 to-rose-500 px-8 py-3 font-black uppercase tracking-wide transition enabled:hover:scale-[1.02] disabled:opacity-40"
             >
               Lock it in
