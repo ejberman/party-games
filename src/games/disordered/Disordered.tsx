@@ -103,7 +103,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     function onSolved(p: { id: string }) {
       const who = members.find((m) => m.id === p.id);
       if (who && who.id !== me?.id) {
-        setToast(`${who.name} cracked it!`);
+        setToast(`🎉 ${who.name} cracked it!`);
         setTimeout(() => setToast(null), 2500);
       }
     }
@@ -242,6 +242,8 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   function submit() {
     if (solved || board.length !== n) return;
     socket.emit("disordered:guess", { order: board });
+    setToast("✅ Guess submitted");
+    setTimeout(() => setToast(null), 2500);
   }
 
   // ---- Setup / waiting ---------------------------------------------------
@@ -296,7 +298,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
       <div>
         {toast && (
           <div className="mb-4 animate-pop-in rounded-xl border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-center text-sky-200">
-            🎉 {toast}
+            {toast}
           </div>
         )}
 
