@@ -43,6 +43,7 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
   const [statements, setStatements] = useState(["", "", ""]);
   const [lieIndex, setLieIndex] = useState<number | null>(null);
   const [myChoice, setMyChoice] = useState<number | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
   const prevPhase = useRef(phase);
 
   // Reveal/gameover sounds on phase transitions.
