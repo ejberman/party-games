@@ -43,6 +43,7 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
   const [statements, setStatements] = useState(["", "", ""]);
   const [lieIndex, setLieIndex] = useState<number | null>(null);
   const [myChoice, setMyChoice] = useState<number | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
   const prevPhase = useRef(phase);
 
   // Reveal/gameover sounds on phase transitions.
@@ -93,6 +94,11 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
       .filter((k) => !(g.submitted ?? []).includes(k));
     return (
       <div className="mx-auto max-w-lg">
+        {toast && (
+          <div className="mb-4 animate-pop-in rounded-xl border border-orange-400/30 bg-orange-400/10 px-4 py-2 text-center text-orange-200">
+            {toast}
+          </div>
+        )}
         <div className="mb-6 text-center">
           <div className="mb-2 text-5xl">🕵️</div>
           <h2 className="text-2xl font-black">Two Truths & a Lie</h2>
@@ -128,7 +134,11 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
             ))}
             <button
               disabled={statements.some((s) => !s.trim()) || lieIndex === null}
-              onClick={() => socket.emit("tt:submit", { statements, lieIndex })}
+              onClick={() => {
+                socket.emit("tt:submit", { statements, lieIndex });
+                setToast("🔒 Locked it in! Nice work.");
+                setTimeout(() => setToast(null), 2500);
+              }}
               className="mt-2 rounded-2xl bg-gradient-to-br from-orange-500 to-rose-500 px-8 py-3 font-black uppercase tracking-wide transition enabled:hover:scale-[1.02] disabled:opacity-40"
             >
               Lock it in
