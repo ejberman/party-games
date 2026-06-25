@@ -103,7 +103,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     function onSolved(p: { id: string }) {
       const who = members.find((m) => m.id === p.id);
       if (who && who.id !== me?.id) {
-        setToast(`${who.name} cracked it!`);
+        setToast(`🎉 ${who.name} cracked it!`);
         setTimeout(() => setToast(null), 2500);
       }
     }
