@@ -378,19 +378,6 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
           </button>
         )}
 
-        {solved && (
-          <div className="animate-pop-in rounded-2xl border border-sky-400/30 bg-sky-400/10 p-5">
-            <p className="text-2xl font-black text-sky-200">
-              🎉 Cracked it in {players[me?.id ?? ""]?.attempts ?? "?"} guesses!
-            </p>
-            {myPlace >= 0 && (
-              <p className="mt-1 text-violet-100/70">
-                You finished {MEDALS[myPlace] ?? `#${myPlace + 1}`}
-              </p>
-            )}
-          </div>
-        )}
-
         {/* Revealed answer */}
         {phase === "revealed" && g.answer && (
           <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4">
