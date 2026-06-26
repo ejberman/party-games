@@ -76,6 +76,8 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   const [history, setHistory] = useState<GuessRow[]>([]);
   const [solved, setSolved] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [submitPing, setSubmitPing] = useState(false);
+  const submitPingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Reset the board + history whenever a new round begins.
   useEffect(() => {
