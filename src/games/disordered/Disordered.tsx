@@ -242,8 +242,6 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   function submit() {
     if (solved || board.length !== n) return;
     socket.emit("disordered:guess", { order: board });
-    setToast("✅ Guess submitted");
-    setTimeout(() => setToast(null), 2500);
   }
 
   // ---- Setup / waiting ---------------------------------------------------
