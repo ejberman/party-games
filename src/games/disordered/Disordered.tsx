@@ -76,6 +76,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   const [history, setHistory] = useState<GuessRow[]>([]);
   const [solved, setSolved] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Reset the board + history whenever a new round begins.
   useEffect(() => {
@@ -99,13 +100,12 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     }) {
       setHistory((h) => [{ order: p.order, correct: p.correct }, ...h]);
       if (p.solved) setSolved(true);
+      if (toastTimer.current !== null) clearTimeout(toastTimer.current);
+      setToast("congrats! you submitted a guess! keep it up!");
+      toastTimer.current = setTimeout(() => setToast(null), 2500);
     }
-    function onSolved(p: { id: string }) {
-      const who = members.find((m) => m.id === p.id);
-      if (who && who.id !== me?.id) {
-        setToast(`🎉 ${who.name} cracked it!`);
-        setTimeout(() => setToast(null), 2500);
-      }
+    function onSolved(_p: { id: string }) {
+      // no-op: toast is now handled by onFeedback for the local player
     }
     socket.on("disordered:feedback", onFeedback);
     socket.on("disordered:solved", onSolved);
@@ -242,8 +242,6 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   function submit() {
     if (solved || board.length !== n) return;
     socket.emit("disordered:guess", { order: board });
-    setToast("✅ Guess submitted");
-    setTimeout(() => setToast(null), 2500);
   }
 
   // ---- Setup / waiting ---------------------------------------------------
@@ -297,7 +295,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     <div className="grid gap-8 lg:grid-cols-[1fr_200px]">
       <div>
         {toast && (
-          <div className="mb-4 animate-pop-in rounded-xl border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-center text-sky-200">
+          <div className="mb-4 animate-pop-in rounded-xl border border-yellow-400/60 bg-yellow-300/20 px-4 py-2 text-center font-bold text-yellow-100">
             {toast}
           </div>
         )}
@@ -378,19 +376,6 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
           >
             Submit guess
           </button>
-        )}
-
-        {solved && (
-          <div className="animate-pop-in rounded-2xl border border-sky-400/30 bg-sky-400/10 p-5">
-            <p className="text-2xl font-black text-sky-200">
-              🎉 Cracked it in {players[me?.id ?? ""]?.attempts ?? "?"} guesses!
-            </p>
-            {myPlace >= 0 && (
-              <p className="mt-1 text-violet-100/70">
-                You finished {MEDALS[myPlace] ?? `#${myPlace + 1}`}
-              </p>
-            )}
-          </div>
         )}
 
         {/* Revealed answer */}
