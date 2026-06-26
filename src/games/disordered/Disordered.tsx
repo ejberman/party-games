@@ -295,7 +295,7 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     <div className="grid gap-8 lg:grid-cols-[1fr_200px]">
       <div>
         {toast && (
-          <div className="mb-4 animate-pop-in rounded-xl border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-center text-sky-200">
+          <div className="mb-4 animate-pop-in rounded-xl border border-yellow-400/60 bg-yellow-300/20 px-4 py-2 text-center font-bold text-yellow-100">
             {toast}
           </div>
         )}
