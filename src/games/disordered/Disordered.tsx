@@ -100,13 +100,12 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
     }) {
       setHistory((h) => [{ order: p.order, correct: p.correct }, ...h]);
       if (p.solved) setSolved(true);
+      if (toastTimer.current !== null) clearTimeout(toastTimer.current);
+      setToast("congrats! you submitted a guess! keep it up!");
+      toastTimer.current = setTimeout(() => setToast(null), 2500);
     }
-    function onSolved(p: { id: string }) {
-      const who = members.find((m) => m.id === p.id);
-      if (who && who.id !== me?.id) {
-        setToast(`🎉 ${who.name} cracked it!`);
-        setTimeout(() => setToast(null), 2500);
-      }
+    function onSolved(_p: { id: string }) {
+      // no-op: toast is now handled by onFeedback for the local player
     }
     socket.on("disordered:feedback", onFeedback);
     socket.on("disordered:solved", onSolved);
