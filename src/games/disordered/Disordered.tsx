@@ -299,6 +299,12 @@ export default function Disordered({ socket, me, members, game }: GameProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_200px]">
       <div>
+        {submitPing && (
+          <div className="animate-pop-in fixed left-1/2 top-6 z-50 -translate-x-1/2 rounded-2xl bg-pink-500 px-6 py-3 text-lg font-black text-white shadow-xl ring-2 ring-pink-300/60">
+            Guess submitted &mdash; you&apos;re awesome!
+          </div>
+        )}
+
         {toast && (
           <div className="mb-4 animate-pop-in rounded-xl border border-sky-400/30 bg-sky-400/10 px-4 py-2 text-center text-sky-200">
             {toast}
