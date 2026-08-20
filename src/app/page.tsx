@@ -27,7 +27,7 @@ export default function Home() {
           🎲 play together, instantly
         </div>
         <h1 className="bg-gradient-to-br from-white to-violet-300 bg-clip-text pb-1 text-5xl font-black leading-tight tracking-tight text-transparent sm:text-6xl">
-          Party Games
+          Welcome back
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-balance text-lg text-violet-100/70">
           Quick, real-time multiplayer mini-games. Start a room, share the link,
