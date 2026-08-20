@@ -88,7 +88,7 @@ export default function TwoTruths({ socket, me, members, game }: GameProps) {
   );
 
   return (
-    <div className="min-h-[60vh] rounded-2xl bg-pink-500/15 px-6 py-6">
+    <div className="min-h-[60vh] rounded-2xl bg-pink-500/40 px-6 py-6">
       {phase === "collect" && (() => {
         const waitingOn = members
           .map((m) => nameKey(m.name))
