@@ -1,96 +1,49 @@
-# Two Truths & a Lie
+# Three Truths & a Lie
 
 _Party Games · Features_
 
-Two Truths & a Lie (labelled **Three Truths & a Lie** in the UI) is a social deduction party game. Every player writes four personal statements and secretly marks one as a lie. Then, one player at a time steps into the spotlight while everyone else tries to sniff out their lie. Good liars score big; good lie-detectors score too.
+Three Truths & a Lie (emoji 🕵️) is a bluffing game where each player submits four personal statements — **three true, one lie** — and the rest of the room tries to sniff out the fake. It requires at least 3 players.
 
-The game is **name-keyed** — if a player refreshes their browser, the server restores their record as long as their name stays the same. Statements, lie positions, and in-flight votes are kept in private server state and never sent to clients until the reveal.
+## How a game plays out
 
----
+### 1. Submission phase (collect)
+Every player writes four statements about themselves and marks which one is the lie. When you submit, the server **silently shuffles the order** of your four statements so the lie's original position gives no hint to other players. The true lie index is stored privately on the server and is never sent to anyone until the reveal.
 
-## Game phases
+The game auto-advances to the guessing phase as soon as every present player has submitted. The host can also force an early start with the **Begin** button, as long as at least one submission exists and there are two or more players.
 
-The game moves through five phases in order: **collect → guess → reveal** (repeated once per player) **→ gameover**.
+> **Watch out:** Statements are capped at 140 characters each. Any empty or whitespace-only statement is rejected. You cannot edit your submission once it's sent.
 
----
+### 2. Guess phase (guess)
+Players take turns being **featured**. When it's your turn, your four (shuffled) statements are shown to everyone else, who each tap the one they think is the lie. You cannot vote on your own round.
 
-## Collect phase — writing statements
+Once every eligible player has voted, the reveal happens automatically. The host can click **Force Reveal** to skip waiting if someone is slow.
 
-Every player sees four text inputs and a row of "truth" / "🤥 the lie" toggle buttons.
+### 3. Reveal
+The correct lie is highlighted and everyone's individual guesses are shown. Scoring:
+- **Correct guesser** → +100 points
+- **Featured player** → +50 points for every player they fooled (i.e., every wrong guess)
 
-**Step by step:**
-1. Each player types four statements about themselves — maximum 140 characters each.
-2. Next to each statement is a button labelled **truth**. Click it once and it switches to **🤥 the lie**, marking that statement as your lie. Only one statement can be the lie at a time; clicking another row moves the mark.
-3. When all four statements are filled in and a lie is selected, the **Lock it in** button becomes active. Clicking it sends the submission and shows a "🔒 Locked it in!" toast for 2.5 seconds.
+After reviewing results, the host clicks **Next** to move to the next featured player. This continues until everyone has been featured.
 
-**What the server does on submission:**
-- Validates that exactly four non-empty statements exist (each ≤ 140 characters) and that the lie index is one of 0–3.
-- **Shuffles the four statements** into a random order before storing them, then remaps the lie index to match the new order. This means the position of your lie on screen doesn't correspond to the position you typed it in — neither you nor anyone else can infer the lie from its slot.
-- Marks the player as submitted and checks whether the game can auto-start.
+### 4. Game over
+After the last featured player's round ends, the game moves to a final scoreboard. The host can click **New Game** to reset everything and start a fresh round of submissions.
 
-After submitting, a player sees a waiting screen listing who hasn't submitted yet.
+## Host controls
 
-**Starting the round (host):** Once at least one player has submitted and there are at least 2 members in the room, the host sees a **"Start guessing with N players →"** button. Clicking it emits `tt:begin` and moves directly to the guess phase — players who haven't submitted yet are skipped. The game also auto-starts without the button if every present player submits.
-
-> **Note:** The host can force-start with as few as 1 submission plus 2 room members. Players who haven't submitted will simply never be the "featured" player that round.
-
----
-
-## Guess phase — voting on the lie
-
-One player is chosen as the **featured player** for the round. Their four (shuffled) statements are shown to everyone.
-
-- The featured player sees their own statements but cannot vote and is told to "act natural."
-- All other players see the prompt **"Which is [Name]'s lie?"** and tap the statement they suspect.
-- Voting is one-shot: once you tap a statement, your choice is locked (the button is disabled for you). A "👈 your pick" label confirms your selection, and as other players vote their names appear as ✅ checkmarks below.
-
-**Auto-reveal:** When every eligible (non-featured) present player has voted, the server automatically triggers the reveal.
-
-**Host force-reveal:** The host sees an **"Everyone's in — reveal now"** button at any time during the guess phase. Clicking it immediately reveals the answer regardless of how many players have voted (`tt:force`). Use this if someone is taking too long.
-
----
-
-## Reveal phase — seeing the results
-
-All four statements flip to show which was the lie (highlighted in red with **🤥 THE LIE**) and which are truths (green with **✓ truth**). Each statement also shows a vote count.
-
-**Scoring on reveal:**
-- Each non-featured player who picked the correct statement earns **+100 points**.
-- The featured player earns **+50 points for every person they fooled** (i.e., every wrong vote).
-- Sound effects play: a correct-answer chime if you found the lie, a wrong-answer tone if you were fooled.
-
-A summary line announces how many people the featured player fooled and their bonus. The host then sees either **"Next player →"** or **"Final standings →"** depending on whether more rounds remain.
-
-**Player disconnect during guess phase:** If the featured player disconnects, the server immediately reveals the round with whatever votes were cast. If a non-featured voter disconnects, the server checks whether everyone remaining has now voted — if so, the reveal triggers automatically.
-
----
-
-## Advancing rounds (host)
-
-After each reveal the host clicks **Next player →** (`tt:next`) to move to the next featured player. This repeats until every player who submitted has had their turn. After the last round, the button changes to **Final standings →**, and clicking it ends the game.
-
----
-
-## Gameover phase
-
-A leaderboard shows all players sorted by score, with medal emojis for the top three. The host sees a **Play again** button (`tt:newGame`) that wipes all statements, votes, scores, and submissions and returns every current room member to the collect phase for a fresh game.
-
----
-
-## Host controls summary
-
-| Button | Phase | What it does |
+| Button | When available | What it does |
 |---|---|---|
-| Start guessing → | Collect | Force-starts the guess phase with submitted players |
-| Everyone's in — reveal now | Guess | Immediately reveals the lie |
-| Next player → / Final standings → | Reveal | Advances to next round or gameover |
-| Play again | Gameover | Full reset, new game |
+| Begin | Collect phase, ≥ 1 submission + ≥ 2 players | Forces the game to start without waiting for all to submit |
+| Force Reveal | Guess phase | Triggers the reveal before all eligible players have voted |
+| Next | Reveal phase | Advances to the next featured player (or ends the game) |
+| New Game | Game-over phase | Clears all statements, votes, and scores and returns to collection |
 
----
+## Things to know
 
-## Scoring quick reference
+- **Name-keyed identity** — like [Beopardy](#doc:beopardy), player records are keyed by display name rather than socket ID. If a player refreshes, their submission is preserved as long as they rejoin with the same name.
+- **Private data** — statements, lie indices, and in-flight votes are kept in server-side private state and are never broadcast to clients until the reveal. The public game state only shows who has submitted (not what they said).
+- **Player departure during guessing** — if the featured player disconnects mid-round, the server immediately reveals the results with whatever votes have been collected so far. If a non-featured voter disconnects, the server checks whether the remaining eligible players have all voted and auto-reveals if so.
+- **Minimum two submitted to begin** — the auto-start only fires when all present players have submitted **and** there are at least two submissions. If you have only one submitter the host must wait for more or the game cannot proceed.
 
-| Event | Points |
-|---|---|
-| Correctly identify the lie | +100 |
-| Featured player fools a guesser | +50 per person fooled |
+## Data touched
+
+This game reads and writes the [Room](#doc:data-model/room) entity (member list, host assignment, game phase) and uses server-private state for statements, lie indices, and votes. See the [Data model](#doc:data-model) for details on where this information lives.
